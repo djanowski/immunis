@@ -1,0 +1,20 @@
+{
+  "name": "immunis",
+  "version": "0.0.1",
+  "description": "Experimental Redis mapper using Immutable.js",
+  "main": "index.js",
+  "repository": "https://github.com/djanowski/immunis",
+  "author": "Damian Janowski <jano@dimaion.com>",
+  "license": "MIT",
+  "peerDependencies": {
+    "immutable": "^3.8.1",
+    "yoredis": "^0.1.0"
+  },
+  "devDependencies": {
+    "bluebird": "^3.5.0",
+    "immutable": "^3.8.1",
+    "tape": "^4.6.3",
+    "tape-promise": "^2.0.1",
+    "yoredis": "^0.1.0"
+  }
+}
