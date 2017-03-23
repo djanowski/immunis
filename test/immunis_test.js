@@ -225,3 +225,59 @@ test('Model - conversions', function(t) {
       t.strictEqual(person.year, 2010);
     });
 });
+
+
+test('Model - update an attribute to null', function(t) {
+  const People = Immunis.model({
+    name:        'Person',
+    constructor: Person
+  });
+
+  const john = new Person({
+    name:  'John',
+    email: 'john@example.com'
+  });
+
+  return People.save(john)
+    .then(function(person) {
+      return People.load(person.id);
+    })
+    .then(function(person) {
+      t.equal(person.email, 'john@example.com');
+      return People.save(person.set('email', null));
+    })
+    .then(function(person) {
+      return People.load(person.id);
+    })
+    .then(function(person) {
+      t.equal(person.email, null);
+    });
+});
+
+
+test('Model - update an attribute to 0', function(t) {
+  const People = Immunis.model({
+    name:        'Person',
+    constructor: Person
+  });
+
+  const john = new Person({
+    name: 'John',
+    year: 1
+  });
+
+  return People.save(john)
+    .then(function(person) {
+      return People.load(person.id);
+    })
+    .then(function(person) {
+      t.equal(person.year, '1');
+      return People.save(person.set('year', 0));
+    })
+    .then(function(person) {
+      return People.load(person.id);
+    })
+    .then(function(person) {
+      t.equal(person.year, '0');
+    });
+});

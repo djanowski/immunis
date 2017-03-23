@@ -20,8 +20,14 @@ const Immunis = {
     return idPromise
       .then(function(_id) {
         id = _id;
-        const map = recordToMap(schema, record);
-        return redis.call('hmset', `${schema.name}:${id}`, ... flatten(map));
+        const map      = recordToMap(schema, record);
+        const nonBlank = map.filter(([ , v ]) => !isBlank(v));
+        const blank    = map.filter(([ , v ]) => isBlank(v)).map(([ k, ]) => k);
+
+        return Promise.all([
+          redis.call('hmset', `${schema.name}:${id}`, ... flatten(nonBlank)),
+          redis.call('hdel',  `${schema.name}:${id}`, ... blank)
+        ]);
       })
       .then(function() {
         const promises = schema.uniques.map(function(attribute) {
@@ -181,8 +187,15 @@ function recordToMap(schema, record) {
     else
       return [ key, value ];
   });
-  const nonBlank = converted.filter(([ , v ]) => v);
-  return nonBlank;
+  return converted;
+}
+
+
+function isBlank(value) {
+  if (value == null) // loose equals, includes undefined
+    return true;
+  else
+    return false;
 }
 
 
