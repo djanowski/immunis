@@ -281,3 +281,37 @@ test('Model - update an attribute to 0', function(t) {
       t.equal(person.year, '0');
     });
 });
+
+
+test('Model - regression: no attribute is blank', function(t) {
+  const Post = Immutable.Record({
+    id:    null,
+    title: null
+  });
+
+  const Posts = Immunis.model({
+    name:        'Post',
+    constructor: Post
+  });
+
+  const post = new Post({ title: 'foo' });
+
+  return Posts.save(post);
+});
+
+
+test('Model - regression: all attributes are blank', function(t) {
+  const Post = Immutable.Record({
+    id:    null,
+    title: null
+  });
+
+  const Posts = Immunis.model({
+    name:        'Post',
+    constructor: Post
+  });
+
+  const post = new Post({});
+
+  return Posts.save(post);
+});

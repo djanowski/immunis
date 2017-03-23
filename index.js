@@ -25,8 +25,8 @@ const Immunis = {
         const blank    = map.filter(([ , v ]) => isBlank(v)).map(([ k, ]) => k);
 
         return Promise.all([
-          redis.call('hmset', `${schema.name}:${id}`, ... flatten(nonBlank)),
-          redis.call('hdel',  `${schema.name}:${id}`, ... blank)
+          nonBlank.length && redis.call('hmset', `${schema.name}:${id}`, ... flatten(nonBlank)),
+          blank.length    && redis.call('hdel',  `${schema.name}:${id}`, ... blank)
         ]);
       })
       .then(function() {
